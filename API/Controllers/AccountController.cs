@@ -7,6 +7,7 @@ using System.Text;
 using API.DTOS;
 using Microsoft.EntityFrameworkCore;
 using API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -51,7 +52,7 @@ namespace API.Controllers
         }
 
         [HttpPost("Login")]
-
+        [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
@@ -60,7 +61,7 @@ namespace API.Controllers
 
             using var hmac = new HMACSHA512(user.PasswordSalt);
 
-            var ComputeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Passwrod));
+            var ComputeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
             for (int i = 0; i < ComputeHash.Length; i++)
             {
