@@ -10,11 +10,15 @@ import { User } from '../_models/user';
 })
 export class AccountService {
     baseUrl = 'https://localhost:5001/api/';
-    private currentUserSource = new ReplaySubject<User | null>(1);
+    private currentUserSource = new ReplaySubject<User>();
     currentUser$ = this.currentUserSource.asObservable();
+    loggedInUser : User | null = null;
+    isLogged = false;
 
   constructor(private http: HttpClient) { }
 
+  ngOnInit(): void {
+  }
 
   login (model: any){
     return this.http.post<User>(this.baseUrl + 'account/login' , model).pipe(
@@ -23,6 +27,9 @@ export class AccountService {
         if (user) {
           localStorage.setItem('user' , JSON.stringify(user));
           this.currentUserSource.next(user);
+          // Set the logged in user and flag
+          this.loggedInUser = user;
+          this.isLogged = true;
         }
       })
     )
@@ -35,6 +42,9 @@ export class AccountService {
         if (user){
           localStorage.setItem('user' , JSON.stringify(user)); 
           this.currentUserSource.next(user);
+          // Set the logged in user flag
+          this.loggedInUser = user;
+          this.isLogged = true;
         }
       })
     )
@@ -46,6 +56,8 @@ export class AccountService {
 
   logout(){debugger
     localStorage.removeItem('user');
-    this.currentUserSource.next(null);
+    this.currentUserSource.next();
+    this.loggedInUser = null;
+    this.isLogged = false;
   }
 }

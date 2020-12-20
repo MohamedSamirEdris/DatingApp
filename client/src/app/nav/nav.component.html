@@ -4,7 +4,7 @@
         <ng-container></ng-container>
             
         <ul class="navbar-nav mr-auto " >
-            <ng-container *ngIf="accountService.currentUser$ | async">
+            <ng-container *ngIf="accountService.isLogged ">
                 <li class="nav-item ">
                     <a class="nav-link" routerLin='/members' routerLinkActive='active'>Matches </a>
                 </li>
@@ -16,12 +16,15 @@
                 </li>
                
             </ng-container>
+            <li class="nav-item">
+                <a class="nav-link " routerLink='/errors' routerLinkActive='active'>Errors</a>
+            </li>
             
         </ul>
         
 
-            <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user " dropdown>
-                <a href="#" class="dropdown-toggle"  dropdownToggle>Welcome {{user.username | titlecase}} </a>
+            <div class="dropdown" *ngIf="accountService.isLogged" dropdown>
+                <a href="#" class="dropdown-toggle"  dropdownToggle>Welcome {{accountService.loggedInUser?.username}} </a>
                 <div class="dropdown-menu mt-3" *dropdownMenu>
                     <a href="" class="dropdown-item">Edit profile </a>
                     <div class="dropdown-divider"></div>
@@ -30,7 +33,7 @@
                 </div>
             </div>
         
-        <form *ngIf="(accountService.currentUser$ |async) == null" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()"
+        <form *ngIf="!accountService.isLogged " #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()"
          autocomplete="off">
             <input name="username" [(ngModel)]="model.username " class="form-control mr-sm-2" type="text"
                 placeholder="Username">

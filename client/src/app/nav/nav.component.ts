@@ -18,11 +18,11 @@ export class NavComponent implements OnInit {
     private toastr: ToastrService  ) { }
 
   ngOnInit(): void {
- 
+      this.getCurrentUser();
   }
 
-  login(){
-    this.accountService.login(this.model).subscribe(reponse => {
+  login(){debugger
+    this.accountService.login(this.model).subscribe(reponse => {debugger
       this.router.navigateByUrl('/members');
       console.log(reponse);
 
@@ -40,10 +40,11 @@ export class NavComponent implements OnInit {
   }
 
   getCurrentUser(){
-    this.accountService.currentUser$.subscribe(user =>{
-    }, error=>{
-      console.log(error); 
-    })
+   this.accountService.currentUser$.subscribe(user =>{
+      
+     }, error=>{
+       console.log(error); 
+   })
   }
 
 
