@@ -4,9 +4,9 @@
         <ng-container></ng-container>
             
         <ul class="navbar-nav mr-auto " >
-            <ng-container *ngIf="accountService.isLogged ">
+            <ng-container *ngIf="accountService.userExists()">
                 <li class="nav-item ">
-                    <a class="nav-link" routerLin='/members' routerLinkActive='active'>Matches </a>
+                    <a class="nav-link" routerLink='/members' routerLinkActive='active'>Matches</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink='lists' routerLinkActive='active'>List</a>
@@ -23,7 +23,7 @@
         </ul>
         
 
-            <div class="dropdown" *ngIf="accountService.isLogged" dropdown>
+            <div class="dropdown" *ngIf="accountService.userExists()" dropdown>
                 <a href="#" class="dropdown-toggle"  dropdownToggle>Welcome {{accountService.loggedInUser?.username}} </a>
                 <div class="dropdown-menu mt-3" *dropdownMenu>
                     <a href="" class="dropdown-item">Edit profile </a>
@@ -33,7 +33,7 @@
                 </div>
             </div>
         
-        <form *ngIf="!accountService.isLogged " #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()"
+        <form *ngIf="!accountService.userExists()" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()"
          autocomplete="off">
             <input name="username" [(ngModel)]="model.username " class="form-control mr-sm-2" type="text"
                 placeholder="Username">

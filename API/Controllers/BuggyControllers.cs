@@ -1,3 +1,4 @@
+using System;
 using API.Data;
 using API.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -37,11 +38,18 @@ namespace API.Controllers
 
         public ActionResult<string> GetServerError()
         {
+        
             
+                
             var thing = __context.Users.Find(-1);
             var thingToReturn = thing.ToString();
 
             return thingToReturn;
+            
+            
+
+
+
 
         }
 

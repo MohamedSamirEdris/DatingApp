@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using System.Threading.Tasks;
 using API.DTOS;
 using API.Entities;
@@ -23,17 +24,39 @@ namespace API.Data
 
         public async Task<MemberDto> GetMemberAsync(string username)
         {
-            return await _context.Users
-            .Where(x => x.UserName == username)
-            .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-            .SingleOrDefaultAsync();
+            try
+            {
+                return await _context.Users
+                .Where(x => x != null && x.UserName == username)
+                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                .SingleOrDefaultAsync();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
         public async Task<IEnumerable<MemberDto>> GetMembersAsync()
         {
-            return await _context.Users
-            .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-            .ToListAsync();
+            try
+            {
+                return await _context.Users
+                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> DeleteUserByUsername(string username)
+        {
+            var user = await GetUserByUsername(username);
+            _context.Users.Remove(user);
+            return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)

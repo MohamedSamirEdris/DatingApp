@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 // import { User } from '../_models/user';
 
@@ -9,15 +10,15 @@ import { User } from '../_models/user';
   providedIn: 'root'
 })
 export class AccountService {
-    baseUrl = 'https://localhost:5001/api/';
+    baseUrl = environment.apiUrl;
     private currentUserSource = new ReplaySubject<User>();
     currentUser$ = this.currentUserSource.asObservable();
     loggedInUser : User | null = null;
-    isLogged = false;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
+
   }
 
   login (model: any){
@@ -29,7 +30,6 @@ export class AccountService {
           this.currentUserSource.next(user);
           // Set the logged in user and flag
           this.loggedInUser = user;
-          this.isLogged = true;
         }
       })
     )
@@ -44,7 +44,6 @@ export class AccountService {
           this.currentUserSource.next(user);
           // Set the logged in user flag
           this.loggedInUser = user;
-          this.isLogged = true;
         }
       })
     )
@@ -54,10 +53,17 @@ export class AccountService {
     this.currentUserSource.next(user);
   }
 
+  userExists(){
+    var user = localStorage.getItem('user');
+    if(user){
+      return true;
+    }
+    return false;
+  }
+
   logout(){debugger
     localStorage.removeItem('user');
     this.currentUserSource.next();
     this.loggedInUser = null;
-    this.isLogged = false;
   }
 }

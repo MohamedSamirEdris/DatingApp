@@ -12,38 +12,37 @@ using AutoMapper;
 
 namespace API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class UsersController : BaseApiController
     {
         private readonly IMapper _mapper;
-
         private readonly IUesrRepository _userRepository;
         public UsersController(IUesrRepository userRepository, IMapper mapper)
         {
             _mapper = mapper;
             _userRepository = userRepository;
-
         }
 
         [HttpGet]
-
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
             var users = await _userRepository.GetMembersAsync();
-
-         
-
             return Ok(users);
         }
 
 
-        [HttpGet("{username}")]
-
+        [HttpGet("{username}")] 
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
-           return  await _userRepository.GetMemberAsync(username);
+           var result = await _userRepository.GetMemberAsync(username);
+           return Ok(result);
+        }
 
-            
+        [HttpDelete("{username}")]
+        public async Task<IActionResult> DeleteUser(string username)
+        {
+            var result = await _userRepository.DeleteUserByUsername(username);
+            return NoContent();
         }
     }
 }
